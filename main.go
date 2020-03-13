@@ -57,32 +57,18 @@ func main() {
 	c.Setup()
 	flag.Parse()
 
+	result := c.Verify()
+	if result != "" {
+		fmt.Println(result)
+		return
+	}
+
 	schema := c.schema
-	if schema == "" {
-		fmt.Println("--schema is missing")
-		return
-	}
 	folder := c.folder
-	if folder == "" {
-		fmt.Println("--folder is missing")
-		return
-	}
-
-	_, err := os.Stat(schema)
-	if err != nil {
-		fmt.Println("Schema file was not found")
-		return
-	}
-
-	_, err = os.Stat(folder)
-	if err != nil {
-		fmt.Println("XML folder was not found")
-		return
-	}
 
 	var files []string
 
-	err = filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
 		files = append(files, path)
 		return nil
 	})
