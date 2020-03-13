@@ -68,9 +68,21 @@ func main() {
 		return
 	}
 
+	_, err := os.Stat(schema)
+	if err != nil {
+		fmt.Println("Schema file was not found")
+		return
+	}
+
+	_, err = os.Stat(folder)
+	if err != nil {
+		fmt.Println("XML folder was not found")
+		return
+	}
+
 	var files []string
 
-	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
 		files = append(files, path)
 		return nil
 	})
@@ -78,9 +90,18 @@ func main() {
 		panic(err)
 	}
 
+	var found int
+
 	for _, file := range files {
 		if strings.HasSuffix(file, ".xml") {
+			found++
 			xmlLint(schema, file)
 		}
+	}
+
+	if found == 0 {
+		fmt.Println("No XML files found")
+	} else {
+		fmt.Printf("Files validated: %v\n", found)
 	}
 }
