@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"os"
 )
@@ -18,24 +19,24 @@ func (c *Config) Setup() {
 }
 
 // Verify the cli flags exsists and the values are valid
-func (c *Config) Verify() string {
+func (c *Config) Verify() (string, string, error) {
 	if c.schema == "" {
-		return "--schema is missing"
+		return "", "", errors.New("--schema is missing")
 	}
 
 	if c.folder == "" {
-		return "--folder is missing"
+		return "", "", errors.New("--folder is missing")
 	}
 
 	_, err := os.Stat(c.schema)
 	if err != nil {
-		return "Schema file was not found"
+		return "", "", errors.New("Schema file was not found")
 	}
 
 	_, err = os.Stat(c.folder)
 	if err != nil {
-		return "XML folder was not found"
+		return "", "", errors.New("XML folder was not found")
 	}
 
-	return ""
+	return c.schema, c.folder, nil
 }

@@ -15,18 +15,15 @@ func main() {
 	c.Setup()
 	flag.Parse()
 
-	result := c.Verify()
-	if result != "" {
-		fmt.Println(result)
+	schema, folder, err := c.Verify()
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	schema := c.schema
-	folder := c.folder
-
 	var files []string
 
-	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
 		files = append(files, path)
 		return nil
 	})
