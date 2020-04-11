@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/cheggaaa/pb"
 )
 
 // TODO: add unit tests
@@ -31,13 +33,26 @@ func main() {
 		panic(err)
 	}
 
-	var found int
+	var bar *pb.ProgressBar
+	if c.progress == "show" {
+		tmpl := `{{ bar . "[" "#" "#" " " "]"}} {{percent .}}`
+		bar = pb.ProgressBarTemplate(tmpl).Start(len(files))
+	}
 
+	var found int
 	for _, file := range files {
 		if strings.HasSuffix(file, ".xml") {
 			found++
 			xmlLint(schema, file)
 		}
+
+		if c.progress == "show" {
+			bar.Increment()
+		}
+	}
+
+	if c.progress == "show" {
+		bar.Finish()
 	}
 
 	if found == 0 {

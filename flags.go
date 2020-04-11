@@ -8,14 +8,16 @@ import (
 
 // Config holds the cli flag values
 type Config struct {
-	schema string
-	folder string
+	folder   string
+	progress string
+	schema   string
 }
 
 // Setup processes the passed cli flag
 func (c *Config) Setup() {
-	flag.StringVar(&c.schema, "schema", "", "schema files location")
 	flag.StringVar(&c.folder, "folder", "", "xml files location")
+	flag.StringVar(&c.progress, "progress", "show", "show/hide progress bar")
+	flag.StringVar(&c.schema, "schema", "", "schema files location")
 }
 
 // Verify the cli flags exsists and the values are valid
